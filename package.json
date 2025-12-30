@@ -1,0 +1,48 @@
+{
+  "name": "LocalChain",
+  "version": "1.0.0",
+  "author": "OpenPay Network <team@openpay.network>",
+  "description": "LocalChain is a JavaScript-first local private chain for Agentic Storage and State Management with Smart Contracts.",
+  "license": "MIT",
+  "keywords": [
+    "nodejs",
+    "javascript",
+    "typescript",
+    "blockchain",
+    "localchain",
+    "agent-chain",
+    "agent-storage",
+    "private-state",
+    "chain-database",
+    "statefull",
+    "private-chain"
+  ],
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openpay-network/LocalChain"
+  },
+  "main": "main.js",
+  "browser": {
+    "./main.js": "./dist/main.js"
+  },
+  "files": [
+    "lib/",
+    "dist/"
+  ],
+  "scripts": {
+    "test": "npm run lint && npm run types && node --test",
+    "types": "tsc -p tsconfig.json",
+    "lint": "eslint . && prettier -c \"**/*.js\" \"**/*.json\" \"**/*.md\" \"**/*.ts\"",
+    "fix": "eslint . --fix && prettier --write \"**/*.js\" \"**/*.json\" \"**/*.md\" \"**/*.ts\""
+  },
+  "engines": {
+    "node": "18 || 20 || 21 || 22 || 23 || 24"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.1",
+    "eslint": "^9.9.1",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.4"
+  }
+}
