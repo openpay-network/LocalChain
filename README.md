@@ -255,6 +255,44 @@ const conversation = await chatAgent.getConversation(
 );
 ```
 
+### Wish List
+
+Wish list system with item management, status tracking, and reservation functionality.
+
+```javascript
+const { WishList } = require('./smart-contracts/wishlist');
+const { Storage, LocalChain, loadKeys } = require('localchain');
+
+const keys = await loadKeys('./keys');
+const chain = await new LocalChain('./localchain');
+const storage = await new Storage('./storage', chain, keys);
+
+// Create wish list
+const wishList = new WishList({ storage, chain });
+await wishList.initialize();
+
+// Add item to wish list
+const item = await wishList.addItem('user-alice', {
+  name: 'MacBook Pro',
+  description: '16-inch MacBook Pro with M3 chip',
+  url: 'https://example.com/macbook',
+  price: 2499,
+  priority: 'high', // low, medium, high
+});
+
+// Another user reserves the item
+await wishList.reserveItem('user-alice', item.itemId, 'user-bob');
+
+// Update item status
+await wishList.updateStatus('user-alice', item.itemId, 'fulfilled');
+
+// Get wish list (with optional status filter)
+const list = await wishList.getWishList('user-alice', 'available');
+
+// Get user's reservations
+const reservations = await wishList.getReservations('user-bob');
+```
+
 ## API Reference
 
 ### LocalChain
@@ -365,6 +403,7 @@ See the `examples/` directory for complete working examples:
 - `example-usdc-bridge.js` - Bridge token implementation
 - `example-bonding-curve.js` - Bonding curve price discovery
 - `example-chat-agent.js` - AI agent chat system with conversation storage
+- `example-wishlist.js` - Wish list system with item reservations
 
 ## Architecture
 
