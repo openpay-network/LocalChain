@@ -1,5 +1,8 @@
 # LocalChain
 
+[![NPM Version](https://badge.fury.io/js/localchain.svg)](https://badge.fury.io/js/localchain)
+[![NPM Downloads](https://img.shields.io/npm/dm/localchain.svg)](https://www.npmjs.com/package/localchain)
+
 **LocalChain** is a JavaScript-first local private chain for Agentic Storage and State Management with Smart Contracts. It provides a tamper-proof, blockchain-backed storage system with built-in encryption, smart contracts, and token economics.
 
 ## Features
@@ -16,7 +19,7 @@
 ## Quick Start
 
 ```javascript
-const { LocalChain, Storage, loadKeys, SmartContract } = require('./main');
+const { LocalChain, Storage, loadKeys, SmartContract } = require('./');
 
 // Initialize
 const keys = await loadKeys('./keys');
@@ -51,7 +54,7 @@ const result = await contract.execute({ id: 'user-123' });
 A local blockchain that maintains an immutable, tamper-proof log of all operations.
 
 ```javascript
-const { LocalChain } = require('./main');
+const { LocalChain } = require('localchain');
 
 const chain = await new LocalChain('./localchain');
 
@@ -75,7 +78,7 @@ const block = await chain.readBlock(hash);
 Blockchain-backed storage with optional encryption and automatic integrity validation.
 
 ```javascript
-const { Storage, LocalChain, loadKeys } = require('./main');
+const { Storage, LocalChain, loadKeys } = require('localchain');
 
 const keys = await loadKeys('./keys');
 const chain = await new LocalChain('./localchain');
@@ -99,7 +102,7 @@ const isValid = await storage.validate('record-1', data, blockHash);
 Write smart contracts in plain JavaScript. Contracts can read from storage and execute business logic.
 
 ```javascript
-const { SmartContract, Storage, LocalChain } = require('./main');
+const { SmartContract, Storage, LocalChain } = require('localchain');
 
 const chain = await new LocalChain('./localchain');
 const storage = await new Storage('./storage', chain);
@@ -145,7 +148,7 @@ Built-in token support for creating digital assets with mint, burn, and transfer
 
 ```javascript
 const { Token } = require('./smart-contracts/token');
-const { Storage, LocalChain } = require('./main');
+const { Storage, LocalChain } = require('localchain');
 
 const chain = await new LocalChain('./localchain');
 const storage = await new Storage('./storage', chain);
@@ -330,20 +333,6 @@ See the `examples/` directory for complete working examples:
 - **RSA Encryption**: 2048-bit keys for data encryption
 - **Tamper Detection**: Automatic validation on read
 - **Private Keys**: Never transmitted, stored locally only
-
-## Roadmap
-
-### 🔄 Solana Hash Sync Mode (Upcoming)
-
-- Introduce a **hash sync mode** with **Solana** to enable external state anchoring and verification
-- LocalChain state hashes will be periodically synced to Solana for additional integrity and interoperability
-- **$OPN** will be used as the **payment token for state synchronization**, enabling:
-  - Pay-per-sync economics
-  - Spam resistance
-  - Sustainable validator incentives
-- Designed to remain **optional and non-custodial**, preserving LocalChain’s local-first and offline-capable philosophy
-
-More details, specifications, and examples will be released as the feature approaches launch.
 
 ## Requirements
 

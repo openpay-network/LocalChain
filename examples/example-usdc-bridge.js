@@ -1,29 +1,21 @@
 'use strict';
 
-const { LocalChain } = require('../lib/chain.js');
-const { Storage } = require('../lib/storage.js');
-const { loadKeys } = require('../lib/keys.js');
-const { Token } = require('../smart-contracts/token.js');
 
-/**
- * Example: Bridge USDC Implementation
- *
- * Demonstrates:
- * 1. Creating a bridge USDC token
- * 2. Minting tokens (when USDC is deposited on main chain)
- * 3. Transferring tokens between addresses
- * 4. Burning tokens (when withdrawing to main chain)
- * 5. Checking balances
- */
+const { Token, loadKeys, Storage, LocalChain } = require('openpay-network');
 
-const main = async () => {
-  console.log('🚀 Initializing Bridge USDC System...\n');
-
-  // Initialize storage
   const keys = await loadKeys('./keys');
   const chain = await new LocalChain('./localchain');
   const storage = await new Storage('./storage', chain, keys);
 
+  const sync = await new SyncMode({
+    network: 'solana',
+    chain,
+    storage,
+    connection,
+    interval: '60',
+  });
+
+  sync.start()
   // Create bridge USDC token
   const usdc = new Token('Bridge USDC', 'bUSDC', { storage, chain });
   await usdc.initialize();
