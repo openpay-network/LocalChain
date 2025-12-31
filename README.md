@@ -203,6 +203,58 @@ console.log(`Sold tokens, received ${sellResult.paymentAmount}`);
 const price = await bondingCurve.getCurrentPrice();
 ```
 
+### Chat Agent
+
+AI agent chat system with conversation storage and consistency validation.
+
+```javascript
+const { ChatAgent } = require('./smart-contracts/chat');
+const { Storage, LocalChain, loadKeys } = require('localchain');
+
+const keys = await loadKeys('./keys');
+const chain = await new LocalChain('./localchain');
+const storage = await new Storage('./storage', chain, keys);
+
+// Create chat agent
+const chatAgent = new ChatAgent({ storage, chain });
+await chatAgent.initialize();
+
+// Create conversation thread
+const thread = await chatAgent.createThread('user-123', {
+  agent: 'agent-ai-001',
+  model: 'gpt-4',
+  preferences: { language: 'en', tone: 'professional' },
+});
+
+// User sends message
+await chatAgent.sendMessage(
+  thread.threadId,
+  'user-123',
+  'user',
+  'Hello! I need help with my project.',
+);
+
+// Agent responds
+await chatAgent.sendMessage(
+  thread.threadId,
+  'user-123',
+  'assistant',
+  "I'd be happy to help! What are you working on?",
+  { model: 'gpt-4', tokens: 15 },
+);
+
+// Update context
+await chatAgent.updateContext(thread.threadId, 'user-123', {
+  project: { type: 'blockchain', language: 'javascript' },
+});
+
+// Retrieve conversation
+const conversation = await chatAgent.getConversation(
+  thread.threadId,
+  'user-123',
+);
+```
+
 ## API Reference
 
 ### LocalChain
@@ -285,6 +337,8 @@ Decrypt data with a private key.
 - **Action History**: Tamper-proof audit trail of agent decisions
 - **Smart Contracts**: Define agent behaviors as executable contracts
 - **Encryption**: Secure sensitive agent data
+- **Chat System**: Conversation threads with message consistency validation
+- **Context Persistence**: Maintain conversation context across interactions
 
 ### Token Economics
 
@@ -310,6 +364,7 @@ See the `examples/` directory for complete working examples:
 
 - `example-usdc-bridge.js` - Bridge token implementation
 - `example-bonding-curve.js` - Bonding curve price discovery
+- `example-chat-agent.js` - AI agent chat system with conversation storage
 
 ## Architecture
 
