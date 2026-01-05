@@ -27,19 +27,14 @@ const main = async () => {
   // Create wish list
   const wishList = new WishList({ storage, chain });
   await wishList.initialize();
-  console.log('✅ Wish list initialized\n');
 
-  const alice = 'user-alice';
-  const bob = 'user-bob';
-  const charlie = 'user-charlie';
+  const user = 'openpay-team';
 
-  // Alice adds items to her wish list
-  console.log('👤 Alice adds items to her wish list:');
-  const item1 = await wishList.addItem(alice, {
-    name: 'MacBook Pro',
-    description: '16-inch MacBook Pro with M3 chip',
-    url: 'https://example.com/macbook',
-    price: 2499,
+  const item1 = await wishList.addItem(user, {
+    name: '$OPN',
+    description: 'MC of $OPN > $1M in 2026',
+    url: 'https://openpay.network',
+    price: 1000000,
     priority: 'high',
   });
   console.log(`   ✅ Added: ${item1.item.name} (${item1.itemId})`);
@@ -64,11 +59,7 @@ const main = async () => {
 
   // Bob reserves an item from Alice's wish list
   console.log('🎯 Bob reserves MacBook Pro from Alice:');
-  const reservation = await wishList.reserveItem(
-    alice,
-    item1.itemId,
-    bob,
-  );
+  const reservation = await wishList.reserveItem(alice, item1.itemId, bob);
   console.log(`   ✅ Reserved by: ${reservation.reservedBy}`);
   console.log(`   Item: ${reservation.item.name}`);
   console.log(`   Status: ${reservation.item.status}\n`);
@@ -83,11 +74,7 @@ const main = async () => {
 
   // Charlie reserves a different item
   console.log('🎯 Charlie reserves Desk Lamp from Alice:');
-  const reservation2 = await wishList.reserveItem(
-    alice,
-    item3.itemId,
-    charlie,
-  );
+  const reservation2 = await wishList.reserveItem(alice, item3.itemId, charlie);
   console.log(`   ✅ Reserved by: ${reservation2.reservedBy}`);
   console.log(`   Item: ${reservation2.item.name}\n`);
 
@@ -96,16 +83,12 @@ const main = async () => {
   const aliceWishList = await wishList.getWishList(alice);
   console.log(`   Total items: ${aliceWishList.totalItems}`);
   aliceWishList.items.forEach((item, idx) => {
-    const reserved = item.reservedBy
-      ? ` (reserved by ${item.reservedBy})`
-      : '';
-    console.log(
-      `   ${idx + 1}. ${item.name} - ${item.status}${reserved}`,
-    );
+    const reserved = item.reservedBy ? ` (reserved by ${item.reservedBy})` : '';
+    console.log(`   ${idx + 1}. ${item.name} - ${item.status}${reserved}`);
   });
 
   // View only available items
-  console.log('\n📋 Available items in Alice\'s wish list:');
+  console.log("\n📋 Available items in Alice's wish list:");
   const availableItems = await wishList.getWishList(alice, 'available');
   console.log(`   Available: ${availableItems.totalItems}`);
   availableItems.items.forEach((item, idx) => {
@@ -113,7 +96,7 @@ const main = async () => {
   });
 
   // Bob views his reservations
-  console.log('\n🎁 Bob\'s reservations:');
+  console.log("\n🎁 Bob's reservations:");
   const bobReservations = await wishList.getReservations(bob);
   console.log(`   Total reservations: ${bobReservations.reservations.length}`);
   bobReservations.reservations.forEach((res, idx) => {
@@ -140,4 +123,3 @@ const main = async () => {
 };
 
 main().catch(console.error);
-

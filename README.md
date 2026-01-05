@@ -293,6 +293,35 @@ const list = await wishList.getWishList('user-alice', 'available');
 const reservations = await wishList.getReservations('user-bob');
 ```
 
+### Private Token
+
+Private token system with encrypted storage for privacy-preserving token transfers.
+
+```javascript
+const { PrivateToken } = require('./smart-contracts/private-token');
+const { Storage, LocalChain, loadKeys } = require('localchain');
+
+const keys = await loadKeys('./keys');
+const chain = await new LocalChain('./localchain');
+const storage = await new Storage('./storage', chain, keys);
+
+// Create private token
+const token = new PrivateToken({ storage, chain });
+await token.initialize();
+
+// Mint tokens (balances stored encrypted)
+await token.mint('0xAlice', 1000, '0xEthereumTxHash...');
+
+// Transfer tokens (all data encrypted)
+await token.transfer('0xAlice', '0xBob', 250);
+
+// Burn tokens
+await token.burn('0xAlice', 100, '0xWithdrawAddress...');
+
+// Check balance (automatically decrypted)
+const balance = await token.getBalance('0xAlice');
+```
+
 ## API Reference
 
 ### LocalChain
@@ -395,6 +424,7 @@ Decrypt data with a private key.
 - **Local-First**: All data stored locally
 - **Encryption**: Optional end-to-end encryption
 - **No Cloud Dependency**: Works completely offline
+- **Private Tokens**: Encrypted token balances with no transaction logs
 
 ## Examples
 
@@ -404,6 +434,7 @@ See the `examples/` directory for complete working examples:
 - `example-bonding-curve.js` - Bonding curve price discovery
 - `example-chat-agent.js` - AI agent chat system with conversation storage
 - `example-wishlist.js` - Wish list system with item reservations
+- `example-private-token.js` - Private token with encrypted storage
 
 ## Architecture
 

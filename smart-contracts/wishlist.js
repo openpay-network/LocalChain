@@ -88,10 +88,14 @@ class WishList {
       };
     };
 
-    this.#addItemContract = new SmartContract('wishlist-add-item', addItemProc, {
-      storage: this.#storage,
-      chain: this.#chain,
-    });
+    this.#addItemContract = new SmartContract(
+      'wishlist-add-item',
+      addItemProc,
+      {
+        storage: this.#storage,
+        chain: this.#chain,
+      },
+    );
 
     // Reserve item contract: allows another user to reserve an item
     const reserveItemProc = async (reader, args) => {
@@ -143,13 +147,14 @@ class WishList {
       await storage.saveData(`wishlist:${ownerId}`, wishList);
 
       // Track reservation for the reserver
-      const reserverReservations =
-        (await reader.get(`reservations:${reservedBy}`)) || {
-          userId: reservedBy,
-          reservations: [],
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
-        };
+      const reserverReservations = (await reader.get(
+        `reservations:${reservedBy}`,
+      )) || {
+        userId: reservedBy,
+        reservations: [],
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      };
 
       reserverReservations.reservations.push({
         itemId,
@@ -160,7 +165,10 @@ class WishList {
       });
       reserverReservations.updatedAt = Date.now();
 
-      await storage.saveData(`reservations:${reservedBy}`, reserverReservations);
+      await storage.saveData(
+        `reservations:${reservedBy}`,
+        reserverReservations,
+      );
 
       // Log to blockchain
       await chain.addBlock({
@@ -379,13 +387,14 @@ class WishList {
    */
   async getReservations(userId) {
     const reservations = await this.#storage.loadData(`reservations:${userId}`);
-    return reservations || {
-      userId,
-      reservations: [],
-      totalReservations: 0,
-    };
+    return (
+      reservations || {
+        userId,
+        reservations: [],
+        totalReservations: 0,
+      }
+    );
   }
 }
 
 module.exports = { WishList };
-
